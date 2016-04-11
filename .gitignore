@@ -1,7 +1,18 @@
+node_modules
 .DS_Store
-.npmignore
-node_modules/
-test/results/
-.DS_Store
+npm-debug.log
+/test/benchmarks
+/.tmp
+/.watch
 
-lib
+# local config files
+/local.json
+/*.conf
+/*.env
+
+# JetBrains project files
+.idea
+*.iml
+
+# build outputs
+/lib

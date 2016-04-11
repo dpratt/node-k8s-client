@@ -10,8 +10,8 @@ const outputDir = 'lib';
 gulp.task('build', 'Do a full build of the application sources.', ['clean', 'check', 'compile']);
 
 gulp.task('clean', 'Clean the output directory.', function() { del.sync(outputDir); });
-gulp.task('check', 'Run a set of validations on the project', ['lint', 'flow']);
 
+gulp.task('check', 'Run a set of validations on the project', ['lint', 'flow']);
 gulp.task('flow', 'Verify flow type annotations in project sources.', done => {
   exec(`${flowBin} status --color=always .`, (err, stdout) => {
     console.log(stdout);
@@ -22,7 +22,6 @@ gulp.task('flow', 'Verify flow type annotations in project sources.', done => {
     }
   });
 });
-
 gulp.task('lint', 'Run the linter on the project sources.', function() {
   return gulp.src(srcFiles)
     .pipe(gulp.plugins.eslint())
@@ -30,10 +29,12 @@ gulp.task('lint', 'Run the linter on the project sources.', function() {
     .pipe(gulp.plugins.eslint.failAfterError());
 });
 
-gulp.task('compile', 'Compile the sources for the project.', ['flow'], function() {
+gulp.task('compile', 'Compile the sources for the project.', function() {
   return gulp.src(srcFiles)
-    .pipe(gulp.plugins.sourcemaps.init())
+    .pipe(gulp.plugins.sourcemaps.init({
+      loadMaps: true
+    }))
     .pipe(gulp.plugins.babel())
-    .pipe(gulp.plugins.sourcemaps.write())
+    .pipe(gulp.plugins.sourcemaps.write('.', {includeContent: false, sourceRoot: '../src'}))
     .pipe(gulp.dest(outputDir));
 });
