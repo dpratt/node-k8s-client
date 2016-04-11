@@ -1,6 +1,7 @@
 //@flow
 
 import request from 'request';
+import fs from 'fs';
 
 function isSuccess(code: number): boolean {
   return (code - (code % 200)) === 200;
@@ -16,6 +17,9 @@ export class ClientError extends Error {
   }
 }
 
+const SERVICE_ACCOUNT_TOKEN_PATH = "/var/run/secrets/kubernetes.io/serviceaccount/token";
+const SERVICE_ACCOUNT_CA_CRT_PATH = "/var/run/secrets/kubernetes.io/serviceaccount/ca.crt";
+
 const DEFAULT_HEADERS = {
   'Accept': 'application/json, */*',
   'User-Agent': 'node-k8s-client'
@@ -30,8 +34,16 @@ export default class HttpClient {
   constructor(host: string, protocol: string = 'https', port?: number, ca?: string, token?: string) {
     const actualPort = port || (protocol === 'https' ? 443 : 80);
     this._baseUrl = `${protocol}://${host}:${actualPort}`;
-    this._ca = ca;
-    this._authToken = token;
+    this._ca = ca || this._readOptionalFile(SERVICE_ACCOUNT_CA_CRT_PATH);
+    this._authToken = token || this._readOptionalFile(SERVICE_ACCOUNT_TOKEN_PATH);
+  }
+
+  _readOptionalFile(path: string): ?string {
+    try {
+      return fs.readFileSync(path, 'utf8');
+    } catch(err) {
+      return null;
+    }
   }
 
   request(method: string, path: string, opts: { body?: any, headers?: Object, query?: Object } = {}): Promise<Object> {
@@ -47,8 +59,6 @@ export default class HttpClient {
       auth: this._authToken ? { bearer: this._authToken } : undefined
     };
 
-//    console.log("Sending request:", JSON.stringify(req, null, 2));
-//    console.log("Sending request:", req.method, req.url);
     return new Promise( (resolve, reject) => {
       request(req, (err, resp, body) => {
         if(err) {
