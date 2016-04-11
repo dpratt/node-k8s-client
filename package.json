@@ -1,6 +1,6 @@
 {
   "name": "@dpratt/node-k8s-client",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Kuberenetes client for NodeJS >= 5.0",
   "main": "lib/index.js",
   "scripts": {
