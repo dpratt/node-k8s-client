@@ -31,9 +31,8 @@ export default class HttpClient {
   _ca: ?string;
   _authToken: ?string;
 
-  constructor(host: string, protocol: string = 'https', port?: number, ca?: string, token?: string) {
-    const actualPort = port || (protocol === 'https' ? 443 : 80);
-    this._baseUrl = `${protocol}://${host}:${actualPort}`;
+  constructor(baseUrl: string, ca?: string, token?: string) {
+    this._baseUrl = baseUrl;
     this._ca = ca || this._readOptionalFile(SERVICE_ACCOUNT_CA_CRT_PATH);
     this._authToken = token || this._readOptionalFile(SERVICE_ACCOUNT_TOKEN_PATH);
   }

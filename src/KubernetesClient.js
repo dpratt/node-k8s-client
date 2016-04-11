@@ -20,10 +20,10 @@ export default class KubernetesClient {
   /**
   * The main entrypoint - create a kubernetes client
   */
-  static async init(host: string, protocol: string = 'https', port?: number, ca?: string, token?: string): Promise<KubernetesClient> {
+  static async init(masterUrl?: string = "https://kubernetes.default.svc", ca?: string, token?: string): Promise<KubernetesClient> {
     type APIGroup = { name: string, basePath: string, resources: {name: string, namespaced: boolean, kind: string}[] };
 
-    const httpClient = new HttpClient(host, protocol, port, ca, token);
+    const httpClient = new HttpClient(masterUrl, ca, token);
 
     async function getApi(name, basePath): Promise<APIGroup> {
       const body = await httpClient.request('GET', basePath);
