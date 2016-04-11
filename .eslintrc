@@ -1,0 +1,51 @@
+{
+    "extends": ["eslint:recommended"],
+    "parser": "babel-eslint",
+
+    "ecmaFeatures": {
+        "modules": true,
+        "classes": true // e.g. static class properties, requires babel-eslint parser
+    },
+
+    "env": {
+      "node": true,
+      "mocha": true,
+      "es6": true
+    },
+
+    "rules": {
+      //"no-cond-assign": [0], // relax if (var i = 1) restriction in eslint:recommended settings
+      "curly": [2, "multi-line"], // one liner's are ok: if (true) return 'ok', multi-lines are not
+      "eqeqeq": [2, "smart"], // smart allows == null
+      "new-cap": [2],
+      "no-undef": [2],
+      "no-caller": [2],
+      "semi": [2, "always"],
+      "quotes": [0],
+      "no-console": [1], // Warn until we can migrate all code to the logger
+      "no-unused-vars": [2, {
+          "vars": "all",
+          "args": "after-used" // "after-used" for when later arguments are used but earlier ones are not
+      }],
+      "callback-return": 2,
+      "comma-dangle": 0,
+      "constructor-super": 2,
+      "handle-callback-err": 2,
+      "new-parens": 2,
+      "no-class-assign": 2,
+      "no-const-assign": 2,
+      "no-dupe-class-members": 2,
+      "no-invalid-this": 0,
+      "no-this-before-super": 2,
+      "no-use-before-define": [
+        2,
+        "nofunc"
+      ],
+      "no-var": 2,
+      "object-shorthand": 0,
+      "prefer-arrow-callback": 0,
+      "prefer-const": 2,
+      "prefer-template": 0
+    }
+}
+

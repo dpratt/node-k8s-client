@@ -1,0 +1,47 @@
+{
+  "name": "@dpratt/node-k8s-client",
+  "version": "0.1.0",
+  "description": "Kuberenetes client for NodeJS >= 5.0",
+  "main": "index.js",
+  "scripts": {},
+  "engines": {
+    "node": ">=5.6.0",
+    "npm": ">=3.3.0"
+  },
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/dpratt/node-k8s-client.git"
+  },
+  "homepage": "https://github.com/dpratt/node-k8s-client",
+  "keywords": [
+    "kubernetes",
+    "k8s"
+  ],
+  "author": "dpratt",
+  "dependencies": {
+    "lodash": "^4.9.0",
+    "request": "^2.70.0"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.7.5",
+    "babel-core": "^6.7.0",
+    "babel-eslint": "^6.0.0",
+    "babel-plugin-transform-export-extensions": "^6.5.0",
+    "babel-plugin-transform-flow-comments": "^6.7.0",
+    "babel-preset-node5": "^11.0.0",
+    "del": "^2.2.0",
+    "eslint": "^2.7.0",
+    "flow-bin": ">=0.22.1",
+    "gulp": "^3.9.1",
+    "gulp-babel": "^6.1.2",
+    "gulp-eslint": "^2.0.0",
+    "gulp-help": "^1.6.1",
+    "gulp-load-plugins": "^1.2.0",
+    "gulp-sourcemaps": "^1.6.0",
+    "gulp-util": "^3.0.7",
+    "mocha": "~1.12.0",
+    "mockery": "~1.4.0",
+    "should": "2.1.1"
+  }
+}
