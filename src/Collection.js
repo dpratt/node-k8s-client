@@ -23,7 +23,10 @@ export default class Collection {
   }
 
   get(namespace?: string = "default"): Promise<Object[]> {
-    return this._client.request('GET', this._resourceBaseUrl(namespace)).then(body => body.items);
+    return this._client
+      .request('GET', this._resourceBaseUrl(namespace))
+      .then(body => body.items)
+    ;
   }
 
   byId(id: string, namespace?: string): Promise<?Object> {
@@ -35,7 +38,34 @@ export default class Collection {
           return null;
         }
         throw err;
-      });
+      })
+    ;
+  }
+
+  byLabels(labels: Object, namespace?: string): Promise<Object[]> {
+    const labelSelector = _
+      .chain(labels)
+      .reduce( (acc, value, key) => _.concat(acc, `${key}=${value}`), [])
+      .join(',')
+      .value()
+    ;
+
+    return this._client
+      .request('GET', this._resourceBaseUrl(namespace), { query: { labelSelector } })
+      .then(body => body.items)
+    ;
+  }
+
+  patch(id: string, operations: {op: string, path: string, value: any}[], namespace?: string): Promise<Object> {
+    return this._client
+      .request('PATCH', `${this._resourceBaseUrl(namespace)}/${id}`, { body: operations, headers: { 'Content-Type': "application/json-patch+json" }} )
+    ;
+  }
+
+  merge(id: string, body: any, namespace?: string): Promise<Object> {
+    return this._client
+      .request('PATCH', `${this._resourceBaseUrl(namespace)}/${id}`, { body: body, headers: { 'Content-Type': "application/strategic-merge-patch+json" }} )
+    ;
   }
 
   _resourceBaseUrl(namespace?: string = 'default'): string {

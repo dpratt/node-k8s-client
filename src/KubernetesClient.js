@@ -6,10 +6,14 @@ import Collection from './Collection';
 
 export default class KubernetesClient {
 
-  collections: Map<string, Collection>;
   pods: Collection;
   services: Collection;
+  replicationControllers: Collection;
+  nodes: Collection;
+  endpoints: Collection;
+  events: Collection;
 
+  _collections: Map<string, Collection>;
   _client: HttpClient;
 
   /**
@@ -38,7 +42,8 @@ export default class KubernetesClient {
     ;
     const apiGroups = _.concat([baseApi], optionalApis);
 
-    const collections = new Map();
+    const collections: Map<string, Collection> = new Map();
+
     apiGroups.forEach(apiGroup => {
       apiGroup.resources.forEach(resource => {
         collections.set(resource.name, new Collection(httpClient, resource.name, resource.kind, apiGroup.basePath, resource.namespaced));
@@ -49,18 +54,19 @@ export default class KubernetesClient {
   }
 
   constructor(collections: Map<string, Collection>, client: HttpClient) {
-    this.collections = collections;
-    this.pods = this._extractCollection("pods");
-    this.services = this._extractCollection("services");
+    this._collections = collections;
+    this.pods = this.collection("pods");
+    this.services = this.collection("services");
 
     this._client = client;
   }
 
-  _extractCollection(name: string): Collection {
-    const collection = this.collections.get(name);
-    if(collection == null) {
-      throw new Error(`Required collection type ${name} not found in API.`);
+  collection(name: string): Collection {
+    const coll = this._collections.get(name);
+    if(coll == null) {
+      throw new Error(`Unknown Kubernetes API object ${name}.`);
     }
-    return collection;
+    return coll;
   }
+
 }

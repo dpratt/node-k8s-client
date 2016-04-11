@@ -16,6 +16,11 @@ export class ClientError extends Error {
   }
 }
 
+const DEFAULT_HEADERS = {
+  'Accept': 'application/json, */*',
+  'User-Agent': 'node-k8s-client'
+};
+
 export default class HttpClient {
 
   _baseUrl: string;
@@ -29,23 +34,21 @@ export default class HttpClient {
     this._authToken = token;
   }
 
-  request(method: string, path: string, body?: Object, headers?: Object): Promise<Object> {
+  request(method: string, path: string, opts: { body?: any, headers?: Object, query?: Object } = {}): Promise<Object> {
 
     const req = {
       method: method,
       url: `${this._baseUrl}${path}`,
       json: true,
-      body: body,
+      body: opts.body,
+      qs: opts.query,
       ca: this._ca,
-      headers: headers || {},
+      headers: Object.assign(DEFAULT_HEADERS, opts.headers || {}),
       auth: this._authToken ? { bearer: this._authToken } : undefined
     };
 
-    // Fix Content-Type header for PATCH methods.
-    if (method === 'PATCH') {
-      req.headers['Content-Type'] = 'application/strategic-merge-patch+json';
-    }
-    console.log("Sending request:", req.method, req.url);
+//    console.log("Sending request:", JSON.stringify(req, null, 2));
+//    console.log("Sending request:", req.method, req.url);
     return new Promise( (resolve, reject) => {
       request(req, (err, resp, body) => {
         if(err) {
